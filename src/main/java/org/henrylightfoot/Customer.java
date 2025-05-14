@@ -7,6 +7,6 @@ public abstract class Customer {
 
     @Override
     public String toString() {
-        return name;
+        return String.format("Hi! I'm a customer. My name is %s, my date of birth is %s and my email is %s. I'm excited to be here!", name, dateOfBirth, contactDetails);
     }
 }

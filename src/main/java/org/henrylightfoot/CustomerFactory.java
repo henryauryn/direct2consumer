@@ -1,5 +1,5 @@
 package org.henrylightfoot;
 
 public interface CustomerFactory {
-    Customer createCustomer(String name);
+    Customer createCustomer(String name, String DOB, String contact);
 }
