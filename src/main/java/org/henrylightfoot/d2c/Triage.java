@@ -16,7 +16,7 @@ public class Triage {
     private Triage(Stage stage) {
         this.stage = stage;
         stage.setTitle("direct2Consumer");
-        pages = Map.of("welcome", new WelcController(this), "reports", new ReportsController(this), "tasks", new TasksController(this), "products", new ProductsController(this), "search", new SearchController(this));
+        pages = Map.of("welcome", new WelcController(this), "reports", new ReportsController(this), "tasks", new TasksController(this), "products", new ProductsController(this), "search", new SearchController(this), "customer", new FullCustomerController(this));
     }
     public static Triage getInstance(Stage stage) {
         if (instance == null) {
@@ -24,6 +24,7 @@ public class Triage {
         }
         return instance;
     }
+
 
     public Stage getStage() {
         return stage;

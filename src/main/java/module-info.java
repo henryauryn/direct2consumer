@@ -5,6 +5,7 @@ module org.henrylightfoot.d2c {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
 
     opens org.henrylightfoot.d2c to javafx.fxml;
     exports org.henrylightfoot.d2c;
