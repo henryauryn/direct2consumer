@@ -8,4 +8,8 @@ module org.henrylightfoot.d2c {
 
     opens org.henrylightfoot.d2c to javafx.fxml;
     exports org.henrylightfoot.d2c;
+    exports org.henrylightfoot.d2c.controller;
+    opens org.henrylightfoot.d2c.controller to javafx.fxml;
+    exports org.henrylightfoot.d2c.view;
+    opens org.henrylightfoot.d2c.view to javafx.fxml;
 }
