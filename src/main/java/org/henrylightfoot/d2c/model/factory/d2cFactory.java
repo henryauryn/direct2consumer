@@ -1,0 +1,7 @@
+package org.henrylightfoot.d2c.model.factory;
+
+import org.henrylightfoot.d2c.model.object.d2cObject;
+
+public abstract class d2cFactory {
+    abstract d2cObject create(int uniqueID, String name, String date, String details, int custID, boolean done);
+}
