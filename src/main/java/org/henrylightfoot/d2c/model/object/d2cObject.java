@@ -1,27 +1,32 @@
 package org.henrylightfoot.d2c.model.object;
 
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public abstract class d2cObject {
-    private int uniqueID;
-    private String name;
-    private String date;
-    private String details;
+    private ReadOnlyIntegerWrapper uniqueID;
+    private StringProperty name;
+    private StringProperty date;
+    private StringProperty details;
 
     protected d2cObject(int uniqueID, String name, String date, String details) {
-        this.uniqueID = uniqueID;
-        this.name = name;
-        this.date = date;
-        this.details = details;
+        this.uniqueID = new ReadOnlyIntegerWrapper(this, "uniqueID", uniqueID);
+        this.name = new SimpleStringProperty(this, "name", name);
+        this.date = new SimpleStringProperty(this, "date", date);
+        this.details = new SimpleStringProperty(this, "details", details);
     }
-    public int getUniqueID() {
+    public ReadOnlyIntegerProperty uniqueIDProperty() {
         return uniqueID;
     }
-    public String getName() {
+    public StringProperty nameProperty() {
         return name;
     }
-    public String getDate() {
+    public StringProperty dateProperty() {
         return date;
     }
-    public String getDetails() {
+    public StringProperty detailsProperty() {
         return details;
     }
 }

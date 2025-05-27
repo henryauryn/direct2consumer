@@ -6,17 +6,37 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 
 public class WelcView {
-    private final Button viewCustomersButton = new Button("View customers");
-    private final Button reportsButton = new Button("Generate Reports");
-    private final Button viewOutstandingTasks = new Button("View Outstanding Tasks");
-    private final Button editProductDirectory = new Button("Edit Product Directory");
-    private final Button exitButton = new Button("Exit");
+    private Button viewCustomersButton = new Button("View Customers");
+    private Button reportsButton = new Button("Generate Reports");
+    private Button viewOutstandingTasks = new Button("View Outstanding Tasks");
+    private Button editProductDirectory = new Button("Edit Product Directory");
+    private Button exitButton = new Button("Exit");
 
     public Parent getView() {
-        VBox root = new VBox();
-        root.setSpacing(15);
+
+        // Title
+        Label titleLabel = new Label("Welcome");
+        titleLabel.getStyleClass().add("page-title");
+
+        viewCustomersButton.getStyleClass().add("button");
+        reportsButton.getStyleClass().add("button");
+        viewOutstandingTasks.getStyleClass().add("button");
+        editProductDirectory.getStyleClass().add("button");
+        exitButton.getStyleClass().add("button");
+
+
+        VBox buttonBox = new VBox(15,
+                viewCustomersButton,
+                reportsButton,
+                viewOutstandingTasks,
+                editProductDirectory,
+                exitButton
+        );
+        buttonBox.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(40, titleLabel, buttonBox);
         root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(viewCustomersButton, reportsButton, viewOutstandingTasks, editProductDirectory, exitButton);
+        root.getStyleClass().add("main-container");
         return root;
     }
 

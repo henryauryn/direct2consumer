@@ -89,4 +89,10 @@ public class SearchView {
     public Button getAddCustomerButton() { return addCustomerButton; }
     public Button getSaveButton() { return saveButton; }
     public Button getCancelButton() { return cancelButton; }
+
+    public String getSearchFieldText() { return searchField.getText(); }
+    public String getNameFieldContents() { return nameField.getText(); }
+    public String getEmailFieldContents() { return emailField.getText(); }
+    public String getPhoneFieldContents() { return phoneField.getText(); }
+    public String getDobFieldContents() { return dobPicker.getValue().toString(); }
 }

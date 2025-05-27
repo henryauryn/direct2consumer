@@ -28,6 +28,10 @@ public class DAO {
         conn.close();
     }
 
+    public Connection getConn() {
+        return conn;
+    }
+
     public void runQueryNoResponse(PreparedStatement query) {
         try {
             query.executeUpdate();
