@@ -39,3 +39,31 @@
 .button:hover {
     -fx-opacity: 0.85;
 }
+/* styles.css */
+
+.choiceLabel {
+    -fx-font-family: "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.choice-box {
+    -fx-background-color: linear-gradient(to bottom, #f0f0f0, #d9d9d9);
+    -fx-background-radius: 6;
+    -fx-padding: 5 10 5 10;
+    -fx-border-color: #aaa;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-font-family: "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #333;
+}
+
+.choice-box .label {
+    -fx-text-fill: #333;
+}
+
+.choice-box:hover {
+    -fx-background-color: linear-gradient(to bottom, #e0e0e0, #cccccc);
+}
+

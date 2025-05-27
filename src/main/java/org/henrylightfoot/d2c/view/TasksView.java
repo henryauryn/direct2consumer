@@ -4,39 +4,83 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import org.henrylightfoot.d2c.model.object.d2cObject;
 
 public class TasksView {
-
-    private final Button backButton = new Button("Back");
-
+    private Button completedButton = new Button("Mark as completed");
+    private Button backButton = new Button("Back");
+    private TableView<d2cObject> tableView = new TableView<>();
 
     public Parent getView() {
-        VBox layout = new VBox(20);
-        layout.setPadding(new Insets(40));
-        layout.getStyleClass().add("main-container");
-
-        // Header
-        Text title = new Text("Tasks");
-        title.getStyleClass().add("page-title");
+        Label header = new Label("Outstanding Tasks");
+        header.getStyleClass().add("page-title");
 
 
-        // Footer with back and add buttons
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        TableColumn<d2cObject, Integer> idCol = new TableColumn<>("ID");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("uniqueID"));
+
+        TableColumn<d2cObject, String> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn<d2cObject, String> dateCol = new TableColumn<>("Deadline");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<d2cObject, String> detailsCol = new TableColumn<>("Description");
+        detailsCol.setCellValueFactory(new PropertyValueFactory<>("details"));
+
+        TableColumn<d2cObject, String> custIdCol = new TableColumn<>("Customer ID");
+        custIdCol.setCellValueFactory(new PropertyValueFactory<>("custId"));
+
+        TableColumn<d2cObject, String> custNameCol = new TableColumn<>("Customer Name");
+        custNameCol.setCellValueFactory(new PropertyValueFactory<>("custName"));
+
+        tableView.getColumns().addAll(idCol, typeCol, dateCol, detailsCol, custIdCol, custNameCol);
+
+        TableView.TableViewSelectionModel<d2cObject> selectionModel = tableView.getSelectionModel();
+        selectionModel.setSelectionMode(SelectionMode.SINGLE);
+        tableView.setPlaceholder(new Label("No tasks found"));
+
+
+        completedButton.getStyleClass().add("button");
+
+
+        backButton.getStyleClass().add("button");
+
+
+
+        HBox buttonBox = new HBox();
+        buttonBox.setPadding(new Insets(10, 0, 0, 0));
+        buttonBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(buttonBox, Priority.ALWAYS);
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox bottomRow = new HBox(10, backButton, spacer);
-        bottomRow.setAlignment(Pos.CENTER);
-        bottomRow.setMaxWidth(Double.MAX_VALUE);
+        buttonBox.getChildren().addAll(backButton, spacer, completedButton);
 
-        layout.getChildren().addAll(title, bottomRow);
+
+        VBox layout = new VBox(20, header, tableView, buttonBox);
+        layout.getStyleClass().add("main-container");
 
         return layout;
     }
 
+    public Button getBackButton() {
+        return backButton;
+    }
+    public Button getCompletedButton() {
+        return completedButton;
+    }
+    public TableView<d2cObject> getTableView() {
+        return tableView;
+    }
 
-
-    public Button getBackButton() { return backButton; }
 
 }

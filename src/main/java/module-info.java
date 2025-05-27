@@ -17,4 +17,7 @@ module org.henrylightfoot.d2c {
     opens org.henrylightfoot.d2c.model.object to javafx.fxml;
     exports org.henrylightfoot.d2c.model.factory;
     opens org.henrylightfoot.d2c.model.factory to javafx.fxml;
+    exports org.henrylightfoot.d2c.model;
+    opens org.henrylightfoot.d2c.model to javafx.fxml;
+
 }

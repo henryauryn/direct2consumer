@@ -67,6 +67,7 @@ public class SearchView {
         phoneField.setPromptText("Phone");
 
         dobPicker.setPromptText("Date of Birth");
+        dobPicker.setEditable(false);
 
         form.getChildren().addAll(nameField, dobPicker, emailField, phoneField);
 
