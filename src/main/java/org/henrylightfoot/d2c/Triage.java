@@ -11,8 +11,11 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import org.henrylightfoot.d2c.controller.*;
+import org.henrylightfoot.d2c.model.DAO;
 import org.henrylightfoot.d2c.model.dbBroker;
 import org.henrylightfoot.d2c.model.object.d2cObject;
+
+import static jdk.xml.internal.SecuritySupport.getResource;
 
 
 public class Triage {
@@ -30,11 +33,14 @@ public class Triage {
         }
         return null;
     };
+    private final DAO accessService = new DAO();
+    private final ReportGenerator reportGenerator;
 
     private final Map<String, Controller> pages;
     private Triage(Stage stage) {
         this.stage = stage;
-        this.databaseService = new dbBroker();
+        this.reportGenerator = new ReportGenerator(this);
+        this.databaseService = new dbBroker(this);
         stage.setTitle("direct2Consumer");
         pages = Map.of("welcome", new WelcController(this), "reports", new ReportsController(this), "tasks", new TasksController(this), "products", new ProductsController(this), "search", new SearchController(this), "customer", new FullCustomerController(this), "result", new ResultsController(this));
     }
@@ -86,6 +92,12 @@ public class Triage {
     }
     public UnaryOperator<TextFormatter.Change> getFilter() {
         return filter;
+    }
+    public DAO getAccessService() {
+        return accessService;
+    }
+    public ReportGenerator getReportGenerator() {
+        return reportGenerator;
     }
 
 

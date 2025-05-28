@@ -6,6 +6,8 @@ module org.henrylightfoot.d2c {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires jasperreports;
+    requires java.desktop;
 
     opens org.henrylightfoot.d2c to javafx.fxml;
     exports org.henrylightfoot.d2c;

@@ -2,6 +2,7 @@ package org.henrylightfoot.d2c.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.henrylightfoot.d2c.Triage;
 import org.henrylightfoot.d2c.model.factory.CustomerFactory;
 import org.henrylightfoot.d2c.model.factory.LogFactory;
 import org.henrylightfoot.d2c.model.factory.TaskFactory;
@@ -17,7 +18,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class dbBroker {
-    DAO accessService = new DAO();
+    public final DAO accessService;
+    public dbBroker(Triage triage) {
+        this.accessService = triage.getAccessService();
+    }
+
     public void insertNewCustomer(String name, String dateOfBirth, String email) {
         try {
             PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO customer VALUES (DEFAULT, ?,?,?)");
