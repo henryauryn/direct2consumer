@@ -14,6 +14,7 @@ import org.henrylightfoot.d2c.model.object.d2cObject;
 public class TasksView {
     private Button completedButton = new Button("Mark as completed");
     private Button backButton = new Button("Back");
+    private Button okButton = new Button("Okay");
     private TableView<d2cObject> tableView = new TableView<>();
 
     public Parent getView() {
@@ -72,11 +73,29 @@ public class TasksView {
         return layout;
     }
 
+    public Parent getAlert() {
+        Label title = new Label("Oops!");
+        title.setStyle("-fx-font-size: 22px; -fx-font-weight: 600; -fx-text-fill: #222;");
+        Label message = new Label("Task not selected.");
+        message.setStyle("-fx-font-size: 14px; -fx-text-fill: #444;");
+        okButton.getStyleClass().add("button");
+
+        VBox layout = new VBox(15, title, message, okButton);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(30));
+        layout.setSpacing(15);
+        layout.getStyleClass().add("alert-container");
+        return layout;
+    }
+
     public Button getBackButton() {
         return backButton;
     }
     public Button getCompletedButton() {
         return completedButton;
+    }
+    public Button getOkButton() {
+        return okButton;
     }
     public TableView<d2cObject> getTableView() {
         return tableView;

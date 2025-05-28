@@ -3,6 +3,7 @@ package org.henrylightfoot.d2c.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.henrylightfoot.d2c.model.factory.CustomerFactory;
+import org.henrylightfoot.d2c.model.factory.LogFactory;
 import org.henrylightfoot.d2c.model.factory.TaskFactory;
 import org.henrylightfoot.d2c.model.object.Customer;
 import org.henrylightfoot.d2c.model.object.d2cObject;
@@ -119,6 +120,54 @@ public class dbBroker {
             e.printStackTrace();
         }
         return customer;
+    }
+
+    public ArrayList<d2cObject> getAllTasks(int custID) {
+        TaskFactory taskFactory = new TaskFactory();
+        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
+        String query = """
+        select
+        	*
+        from
+        	task
+        where
+        	customer_id = ?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                results.add(taskFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getBoolean(6)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    public ArrayList<d2cObject> getAllLogs(int custID) {
+        LogFactory logFactory = new LogFactory();
+        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
+        String query = """
+        select
+        	*
+        from
+        	log
+        where
+        	customer_id = ?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                results.add(logFactory.create(rs.getInt(3), rs.getString(1), rs.getString(5), rs.getString(2), rs.getInt(4), false));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
     }
 
     public void taskCompleted(int taskId) {
