@@ -6,14 +6,21 @@ import javafx.stage.Stage;
 import org.henrylightfoot.d2c.controller.Controller;
 import org.henrylightfoot.d2c.controller.WelcController;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 import org.henrylightfoot.d2c.controller.*;
 import org.henrylightfoot.d2c.model.DAO;
 import org.henrylightfoot.d2c.model.dbBroker;
+import org.henrylightfoot.d2c.model.object.Task;
 import org.henrylightfoot.d2c.model.object.d2cObject;
+import org.henrylightfoot.d2c.observer.ConsoleNotifier;
+import org.henrylightfoot.d2c.observer.FXTaskDueObserver;
+import org.henrylightfoot.d2c.observer.TaskNotifier;
 
 import static jdk.xml.internal.SecuritySupport.getResource;
 
@@ -35,6 +42,8 @@ public class Triage {
     };
     private final DAO accessService = new DAO();
     private final ReportGenerator reportGenerator;
+    private TaskNotifier taskNotifier;
+
 
     private final Map<String, Controller> pages;
     private Triage(Stage stage) {
@@ -43,6 +52,13 @@ public class Triage {
         this.databaseService = new dbBroker(this);
         stage.setTitle("direct2Consumer");
         pages = Map.of("welcome", new WelcController(this), "reports", new ReportsController(this), "tasks", new TasksController(this), "products", new ProductsController(this), "search", new SearchController(this), "customer", new FullCustomerController(this), "result", new ResultsController(this));
+
+        taskNotifier = new TaskNotifier();
+
+        taskNotifier.addObserver(new FXTaskDueObserver());
+        taskNotifier.addObserver(new ConsoleNotifier());
+
+        checkTasksDueToday();
     }
     public static Triage getInstance(Stage stage) {
         if (instance == null) {
@@ -98,6 +114,20 @@ public class Triage {
     }
     public ReportGenerator getReportGenerator() {
         return reportGenerator;
+    }
+
+    private void checkTasksDueToday() {
+        List<d2cObject> allTasks = databaseService.getAllTaskTableData();
+        LocalDate today = LocalDate.now();
+
+        // Group tasks by customer ID if you expect multiple per customer
+        Map<Integer, List<d2cObject>> dueMap = allTasks.stream()
+                .filter(task -> LocalDate.parse(task.dateProperty().get()).isEqual(today))
+                .collect(Collectors.groupingBy(d2cObject::getCustID));
+
+        for (Map.Entry<Integer, List<d2cObject>> entry : dueMap.entrySet()) {
+            taskNotifier.notifyObservers(entry.getKey(), entry.getValue());
+        }
     }
 
 

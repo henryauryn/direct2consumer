@@ -10,12 +10,16 @@ public abstract class d2cObject {
     private StringProperty name;
     private StringProperty date;
     private StringProperty details;
+    protected ReadOnlyIntegerWrapper custID;
 
     protected d2cObject(int uniqueID, String name, String date, String details) {
         this.uniqueID = new ReadOnlyIntegerWrapper(this, "uniqueID", uniqueID);
         this.name = new SimpleStringProperty(this, "name", name);
         this.date = new SimpleStringProperty(this, "date", date);
         this.details = new SimpleStringProperty(this, "details", details);
+    }
+    public int getCustID() {
+        return custID.get();
     }
     public ReadOnlyIntegerProperty uniqueIDProperty() {
         return uniqueID;

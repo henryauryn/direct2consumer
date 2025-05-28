@@ -3,7 +3,7 @@ package org.henrylightfoot.d2c.model.object;
 import javafx.beans.property.*;
 
 public class Task extends d2cObject {
-    private ReadOnlyIntegerWrapper custID;
+
     private StringProperty custName;
     private BooleanProperty done;
 
@@ -29,4 +29,5 @@ public class Task extends d2cObject {
     public BooleanProperty doneProperty() {
         return done;
     }
+
 }
