@@ -3,6 +3,7 @@ package org.henrylightfoot.d2c.model;
 import javafx.beans.property.*;
 
 public class Product {
+    //JavaFX Beans Properties are used because of their lovely seamless integration with TableViews and CellValueFactories
     private StringProperty scentName = new SimpleStringProperty(this, "scentName", null);
     private ReadOnlyDoubleWrapper price = new ReadOnlyDoubleWrapper(this, "price", 0);
     private ReadOnlyDoubleWrapper volume = new ReadOnlyDoubleWrapper(this, "volume", 0);
@@ -18,6 +19,7 @@ public class Product {
         this.productID.set(productID);
         this.revenue.set(revenue);
     }
+    //JavaFX TableView CellValueFactories look for the Property methods below, they have to be strictly named, case-sensitive [name]Property() otherwise the TableView won't see them
     public StringProperty scentNameProperty() {
         return scentName;
     }

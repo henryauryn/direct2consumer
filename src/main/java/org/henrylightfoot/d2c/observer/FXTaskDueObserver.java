@@ -8,8 +8,10 @@ import org.henrylightfoot.d2c.model.object.d2cObject;
 import java.util.List;
 
 public class FXTaskDueObserver implements TaskDueObserver {
+    //GUI observer implementation that creates JavaFX Alerts for any tasks matching the system's current date
     @Override
     public void onTasksDueToday(int customerId, List<d2cObject> dueTasks) {
+        //Platform.runLater used to avoid multi-threading problems
         Platform.runLater(() -> {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Task Notification");

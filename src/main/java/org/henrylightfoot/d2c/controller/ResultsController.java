@@ -35,6 +35,7 @@ public class ResultsController implements Controller {
         view.getTableView().getItems().addAll(triage.getSearchResults());
     }
     private void viewCustomer() {
+        //setting global customer transfer variables in Triage if the user has selected a table row when they click 'view', so the 'FullCustomerController' can know who they want to look at
         if (!selectionModel.isEmpty()) {
             int custID = selectionModel.getSelectedItem().uniqueIDProperty().get();
             triage.setCustomerDisplayed(custID);

@@ -27,6 +27,7 @@ public class SearchController implements Controller {
         view.getSearchButton().setOnAction(e -> {search(view.getSearchFieldText());});
         view.getAddCustomerButton().setOnAction(e -> {openAdd();});
     }
+    //add customer pop-up
     private void openAdd() {
         view.getSaveButton().setOnAction(e -> {saveCustomer(view.getNameFieldContents(), view.getDobFieldContents(), view.getEmailFieldContents(), view.getPhoneFieldContents());});
         view.getCancelButton().setOnAction(e -> {closeWindow(view.getCancelButton());});

@@ -16,7 +16,7 @@ public class TaskNotifier {
     public void removeObserver(TaskDueObserver observer) {
         observers.remove(observer);
     }
-
+    //method that calls the JavaFx Alert-building method
     public void notifyObservers(int customerId, List<d2cObject> dueTasks) {
         for (TaskDueObserver observer : observers) {
             observer.onTasksDueToday(customerId, dueTasks);

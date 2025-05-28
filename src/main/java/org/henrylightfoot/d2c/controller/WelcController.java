@@ -10,7 +10,7 @@ public class WelcController implements Controller {
     private final Triage triage;
 
     WelcView view = new WelcView();
-
+    //application traversal button setting-up
     public WelcController(Triage triage) {
         this.triage = triage;
         view.getViewCustomersButton().setOnAction(event -> {triage.showPage("search");});

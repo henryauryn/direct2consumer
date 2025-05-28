@@ -1,17 +1,13 @@
 package org.henrylightfoot.d2c.model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.henrylightfoot.d2c.Triage;
 import org.henrylightfoot.d2c.model.factory.CustomerFactory;
 import org.henrylightfoot.d2c.model.factory.LogFactory;
 import org.henrylightfoot.d2c.model.factory.TaskFactory;
-import org.henrylightfoot.d2c.model.object.Customer;
 import org.henrylightfoot.d2c.model.object.Log;
 import org.henrylightfoot.d2c.model.object.Task;
 import org.henrylightfoot.d2c.model.object.d2cObject;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,10 +15,12 @@ import java.util.ArrayList;
 
 public class dbBroker {
     public final DAO accessService;
+    //ensure we get the DTO from Triage so there aren't duplicates interferring with ReportGenerator for example
     public dbBroker(Triage triage) {
         this.accessService = triage.getAccessService();
     }
-
+    //PreparedStatement is used for every single query to ensure basic security protection when using parameters
+    //inserting new objects
     public void insertNewCustomer(String name, String dateOfBirth, String email) {
         try {
             PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO customer VALUES (DEFAULT, ?,?,?)");
@@ -34,7 +32,6 @@ public class dbBroker {
             e.printStackTrace();
         }
     }
-
     public void insertNewProduct(String name, double price, double volume, String quantity, String form) {
         try {
             PreparedStatement stmt = accessService.getConn().prepareStatement("insert into product values (default, ?, ?, ?, ?, ?);");
@@ -48,33 +45,57 @@ public class dbBroker {
             e.printStackTrace();
         }
     }
+    public void insertTask(Task task) {
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO task VALUES (DEFAULT, ?, ?, ?, ?, ?)");
+            stmt.setString(1, task.nameProperty().get());
+            stmt.setDate(2, java.sql.Date.valueOf(task.dateProperty().get()));
+            stmt.setString(3, task.detailsProperty().get());
+            stmt.setInt(4, task.custIdProperty().get());
+            stmt.setBoolean(5, task.doneProperty().get());
 
-    public ArrayList<d2cObject> searchCustomers(String query) {
-        ArrayList<d2cObject> customers = new ArrayList<d2cObject>();
-        CustomerFactory customerFactory = new CustomerFactory();
-
-        String sql = "SELECT customer_id, name, date_of_birth, contact_details FROM customer WHERE " +
-                "LOWER(name) LIKE ? OR LOWER(contact_details) LIKE ?";
-
-        try (
-             PreparedStatement stmt = accessService.getConn().prepareStatement(sql)) {
-
-            String wildcardQuery = "%" + query.toLowerCase() + "%";
-            stmt.setString(1, wildcardQuery);
-            stmt.setString(2, wildcardQuery);
-
-            ResultSet rs = accessService.runQueryWithResponse(stmt);
-            while (rs.next()) {
-                customers.add(customerFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 0, false));
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            accessService.runQueryNoResponse(stmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        return customers;
     }
+    public void insertLog(Log log) {
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO log VALUES (?,?, DEFAULT, ?, ?)");
+            stmt.setString(1, log.nameProperty().get());
+            stmt.setString(2, log.detailsProperty().get());
+            stmt.setInt(3, log.getCustID());
+            stmt.setDate(4, java.sql.Date.valueOf(log.dateProperty().get()));
+            accessService.runQueryNoResponse(stmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void insertPurchase(int customerId, ProductInList chosenProduct, String pDate, int quantity) {
+        for (int i = 0; i < quantity; i++) {
+            try {
+                PreparedStatement stmt = accessService.getConn().prepareStatement("insert into \"customer_product\" values (DEFAULT,?,?,?);");
+                stmt.setInt(1,customerId);
+                stmt.setInt(2,chosenProduct.getID());
+                stmt.setDate(3,java.sql.Date.valueOf(pDate));
+                accessService.runQueryNoResponse(stmt);
+            } catch (SQLException e) {
 
+                e.printStackTrace();
+            }
+        }
+    }
+    //change task.done to true in database
+    public void taskCompleted(int taskId) {
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement("update task set done = true where task_id = ?;");
+            stmt.setInt(1, taskId);
+            accessService.runQueryNoResponse(stmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //select all queries
     public ArrayList<d2cObject> getAllTaskTableData() {
         TaskFactory taskFactory = new TaskFactory();
         ArrayList<d2cObject> results = new ArrayList<d2cObject>();
@@ -103,90 +124,6 @@ public class dbBroker {
         }
         return results;
     }
-
-    public d2cObject getCustomer(int custID) {
-        CustomerFactory customerFactory = new CustomerFactory();
-        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
-        d2cObject customer = null;
-        String query = """
-        select
-        	*
-        from
-        	customer
-        where
-        	customer_id = ?;
-        """;
-        try {
-            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
-            stmt.setInt(1, custID);
-            ResultSet rs = accessService.runQueryWithResponse(stmt);
-            while (rs.next()) {
-                customer = customerFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 0, false);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return customer;
-    }
-
-    public ArrayList<d2cObject> getAllTasks(int custID) {
-        TaskFactory taskFactory = new TaskFactory();
-        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
-        String query = """
-        select
-        	*
-        from
-        	task
-        where
-        	customer_id = ?;
-        """;
-        try {
-            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
-            stmt.setInt(1, custID);
-            ResultSet rs = accessService.runQueryWithResponse(stmt);
-            while (rs.next()) {
-                results.add(taskFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getBoolean(6)));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return results;
-    }
-
-    public ArrayList<d2cObject> getAllLogs(int custID) {
-        LogFactory logFactory = new LogFactory();
-        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
-        String query = """
-        select
-        	*
-        from
-        	log
-        where
-        	customer_id = ?;
-        """;
-        try {
-            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
-            stmt.setInt(1, custID);
-            ResultSet rs = accessService.runQueryWithResponse(stmt);
-            while (rs.next()) {
-                results.add(logFactory.create(rs.getInt(3), rs.getString(1), rs.getString(5), rs.getString(2), rs.getInt(4), false));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return results;
-    }
-
-    public void taskCompleted(int taskId) {
-        try {
-            PreparedStatement stmt = accessService.getConn().prepareStatement("update task set done = true where task_id = ?;");
-            stmt.setInt(1, taskId);
-            accessService.runQueryNoResponse(stmt);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public ArrayList<Product> getAllProductTableData() {
         ArrayList<Product> results = new ArrayList<Product>();
         String query = """
@@ -217,34 +154,6 @@ public class dbBroker {
         }
         return results;
     }
-
-    public void insertTask(Task task) {
-        try {
-            PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO task VALUES (DEFAULT, ?, ?, ?, ?, ?)");
-            stmt.setString(1, task.nameProperty().get());
-            stmt.setDate(2, java.sql.Date.valueOf(task.dateProperty().get()));
-            stmt.setString(3, task.detailsProperty().get());
-            stmt.setInt(4, task.custIdProperty().get());
-            stmt.setBoolean(5, task.doneProperty().get());
-
-            accessService.runQueryNoResponse(stmt);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void insertLog(Log log) {
-        try {
-            PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO log VALUES (?,?, DEFAULT, ?, ?)");
-            stmt.setString(1, log.nameProperty().get());
-            stmt.setString(2, log.detailsProperty().get());
-            stmt.setInt(3, log.getCustID());
-            stmt.setDate(4, java.sql.Date.valueOf(log.dateProperty().get()));
-            accessService.runQueryNoResponse(stmt);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
     public ArrayList<ProductInList> getProductsToPickFrom() {
         ArrayList<ProductInList> results = new ArrayList<>();
         String query = """
@@ -264,22 +173,77 @@ public class dbBroker {
         }
         return results;
     }
-
-    public void addPurchase(int customerId, ProductInList chosenProduct, String pDate, int quantity) {
-        for (int i = 0; i < quantity; i++) {
-            try {
-                PreparedStatement stmt = accessService.getConn().prepareStatement("insert into \"customer_product\" values (DEFAULT,?,?,?);");
-                stmt.setInt(1,customerId);
-                stmt.setInt(2,chosenProduct.getID());
-                stmt.setDate(3,java.sql.Date.valueOf(pDate));
-                accessService.runQueryNoResponse(stmt);
-            } catch (SQLException e) {
-
-                e.printStackTrace();
+    //getting customer-specific stuff
+    public d2cObject getCustomer(int custID) {
+        CustomerFactory customerFactory = new CustomerFactory();
+        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
+        d2cObject customer = null;
+        String query = """
+        select
+        	*
+        from
+        	customer
+        where
+        	customer_id = ?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                customer = customerFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 0, false);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return customer;
     }
-
+    public ArrayList<d2cObject> getAllTasks(int custID) {
+        TaskFactory taskFactory = new TaskFactory();
+        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
+        String query = """
+        select
+        	*
+        from
+        	task
+        where
+        	customer_id = ?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                results.add(taskFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getBoolean(6)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+    public ArrayList<d2cObject> getAllLogs(int custID) {
+        LogFactory logFactory = new LogFactory();
+        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
+        String query = """
+        select
+        	*
+        from
+        	log
+        where
+        	customer_id = ?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                results.add(logFactory.create(rs.getInt(3), rs.getString(1), rs.getString(5), rs.getString(2), rs.getInt(4), false));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
     public ArrayList<ProductInList> getCustPurchases(int custID) {
         ArrayList<ProductInList> results = new ArrayList<>();
         String query = """
@@ -303,7 +267,7 @@ public class dbBroker {
         }
         return results;
     }
-
+    //this is the 'bought 6 items over [whatever timeframe] spending £[whatever]' line on the view cust page:
     public String getCustPurchaseHeadline(int custID) {
         String result = "";
         String query = """
@@ -325,6 +289,36 @@ public class dbBroker {
         }
         return result;
     }
+    //searching for customers
+    public ArrayList<d2cObject> searchCustomers(String query) {
+        ArrayList<d2cObject> customers = new ArrayList<d2cObject>();
+        CustomerFactory customerFactory = new CustomerFactory();
+
+        String sql = "SELECT customer_id, name, date_of_birth, contact_details FROM customer WHERE " +
+                "LOWER(name) LIKE ? OR LOWER(contact_details) LIKE ?";
+
+        try (
+                PreparedStatement stmt = accessService.getConn().prepareStatement(sql)) {
+
+            String wildcardQuery = "%" + query.toLowerCase() + "%";
+            stmt.setString(1, wildcardQuery);
+            stmt.setString(2, wildcardQuery);
+
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                customers.add(customerFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 0, false));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return customers;
+    }
+
+
+
+
 
 
 

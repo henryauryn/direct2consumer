@@ -13,22 +13,22 @@ import java.util.Map;
 
 public class ReportGenerator {
     private Triage triage;
+    //setting triage to get access to reliable database object
     public ReportGenerator(Triage triage) {
         this.triage = triage;
     }
 
-
+    //using the JasperReport library, imported with Maven. Created 3 JRXML files using JasperSoft Studio, PGSQL integrated directly in those in the resources folder
     public void generatePdfReport(String jrxmlPath, String pdfOutputPath) {
         try {
             // 1. Compile JRXML file
             JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlPath);
 
-            // 2. Connect to your PostgreSQL database
+            // 2. Connect to Postgres
             Connection conn = triage.getAccessService().getConn();
 
             // 3. Fill the report
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("ReportTitle", "My Custom Report"); // optional
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
 
@@ -43,6 +43,7 @@ public class ReportGenerator {
     }
 
     public void openPdf(String filePath) {
+        //opens freshly created PDF using system browser (e.g Preview or Acrobat)
         try {
             File file = new File(filePath);
             if (file.exists()) {
@@ -60,6 +61,7 @@ public class ReportGenerator {
     }
 
     public String getUniqueFilename(String directoryPath, String baseName, String extension) {
+        //makes sure that if fileName already exists, append number to avoid crashes
         int counter = 0;
         String filename = baseName + "." + extension;
         File file = new File(directoryPath, filename);

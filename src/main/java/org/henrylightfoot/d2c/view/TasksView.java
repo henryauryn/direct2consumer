@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import org.henrylightfoot.d2c.model.object.d2cObject;
 
 public class TasksView {
+    //buttons
     private Button completedButton = new Button("Mark as completed");
     private Button backButton = new Button("← Back");
     private Button okButton = new Button("Okay");
@@ -20,60 +21,42 @@ public class TasksView {
     public Parent getView() {
         Label header = new Label("Outstanding Tasks");
         header.getStyleClass().add("page-title");
-
-
+        //table set-up
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
         TableColumn<d2cObject, Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("uniqueID"));
-
         TableColumn<d2cObject, String> typeCol = new TableColumn<>("Type");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-
         TableColumn<d2cObject, String> dateCol = new TableColumn<>("Deadline");
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
-
         TableColumn<d2cObject, String> detailsCol = new TableColumn<>("Description");
         detailsCol.setCellValueFactory(new PropertyValueFactory<>("details"));
-
         TableColumn<d2cObject, String> custIdCol = new TableColumn<>("Customer ID");
         custIdCol.setCellValueFactory(new PropertyValueFactory<>("custId"));
-
         TableColumn<d2cObject, String> custNameCol = new TableColumn<>("Customer Name");
         custNameCol.setCellValueFactory(new PropertyValueFactory<>("custName"));
-
         tableView.getColumns().addAll(idCol, typeCol, dateCol, detailsCol, custIdCol, custNameCol);
-
         TableView.TableViewSelectionModel<d2cObject> selectionModel = tableView.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
         tableView.setPlaceholder(new Label("No tasks found"));
-
-
+        //button styling and alignment
         completedButton.getStyleClass().add("button");
-
-
         backButton.getStyleClass().add("button");
-
-
-
         HBox buttonBox = new HBox();
         buttonBox.setPadding(new Insets(10, 0, 0, 0));
         buttonBox.setAlignment(Pos.CENTER);
         HBox.setHgrow(buttonBox, Priority.ALWAYS);
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
         buttonBox.getChildren().addAll(backButton, spacer, completedButton);
-
 
         VBox layout = new VBox(20, header, tableView, buttonBox);
         layout.getStyleClass().add("main-container");
-
         return layout;
     }
 
     public Parent getAlert() {
+        //view to feed into DialogueEngine when user hasn't selected necessary option
         Label title = new Label("Oops!");
         title.setStyle("-fx-font-size: 22px; -fx-font-weight: 600; -fx-text-fill: #222;");
         Label message = new Label("Task not selected.");
@@ -87,7 +70,7 @@ public class TasksView {
         layout.getStyleClass().add("alert-container");
         return layout;
     }
-
+    //getters
     public Button getBackButton() {
         return backButton;
     }
