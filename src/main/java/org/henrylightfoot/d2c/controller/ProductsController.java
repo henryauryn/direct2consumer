@@ -16,6 +16,8 @@ public class ProductsController implements Controller {
     public ProductsController(Triage triage) {
         this.triage = triage;
         view = new ProductsView();
+        view.getQuantityChoiceBox().getItems().addAll("g", "ml");
+        view.getTypeChoiceBox().getItems().addAll("Candle", "Eau de Parfum", "Eau de Toilette","Scented soap", "Perfumed hand cream", "Perfumed body balm", "Refillable solid perfume", "Hair mist", "Glass vessel", "Refill for home fragrance diffuser");
         setButons();
         scene = new Scene(view.getView(), 900, 450);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
@@ -36,7 +38,9 @@ public class ProductsController implements Controller {
         view.getSaveButton().setOnAction(event -> {saveProduct(view.getScentName(), view.getPrice(), view.getVolume(), view.getQuantity(), view.getType());});
     }
     private void saveProduct(String name, String price, String volume, String quantity, String form) {
-
+        triage.getDbService().insertNewProduct(name, Double.parseDouble(price), Double.parseDouble(volume), quantity, form);
+        populateTable();
+        closeWindow(view.getSaveButton());
     }
     private void closeWindow(Button theButton) {
         Stage currentStage = (Stage) theButton.getScene().getWindow();

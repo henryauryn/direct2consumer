@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.henrylightfoot.d2c.model.Product;
 
+import java.util.function.UnaryOperator;
+
 public class ProductsView {
     private Button addButton = new Button("Add Product");
     private Button backButton = new Button("Back");
@@ -86,6 +88,19 @@ public class ProductsView {
         layout.setPadding(new Insets(40));
         layout.getStyleClass().add("main-container");
 
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("-?\\d*(\\.\\d*)?")) {
+                return change;
+            }
+            return null;
+        };
+        TextFormatter<String> volumeFormatter = new TextFormatter<>(filter);
+        TextFormatter<String> priceFormatter = new TextFormatter<>(filter);
+        volumeField.setTextFormatter(volumeFormatter);
+        priceField.setTextFormatter(priceFormatter);
+
+
         // Title
         Text title = new Text("Add Product");
         title.getStyleClass().add("page-title");
@@ -97,13 +112,13 @@ public class ProductsView {
         Label productLabel = new Label("Product form:");
         productLabel.getStyleClass().add("choiceLabel");
         typeChoiceBox.getStyleClass().add("choice-box");
-        typeChoiceBox.getItems().addAll("Candle", "Eau de Parfum", "Eau de Toilette","Scented soap", "Perfumed hand cream", "Perfumed body balm", "Refillable solid perfume", "Hair mist", "Glass vessel", "Refill for home fragrance diffuser");
+
         typeChoiceBox.setValue("Candle");
 
         Label quantityLabel = new Label("Quantity:");
         quantityLabel.getStyleClass().add("choiceLabel");
         quantityChoiceBox.getStyleClass().add("choice-box");
-        quantityChoiceBox.getItems().addAll("g", "ml");
+
         quantityChoiceBox.setValue("g");
 
         scentNameField.setPromptText("Scent Name");
@@ -154,6 +169,12 @@ public class ProductsView {
     }
     public Button getCancelButton() {
         return cancelButton;
+    }
+    public ChoiceBox<String> getTypeChoiceBox() {
+        return typeChoiceBox;
+    }
+    public ChoiceBox<String> getQuantityChoiceBox() {
+        return quantityChoiceBox;
     }
 
 
