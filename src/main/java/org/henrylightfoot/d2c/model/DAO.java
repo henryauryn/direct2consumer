@@ -5,9 +5,10 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DAO {
+    //enter your credentials here after creating the seed database from the provided SQL scripts in the resources folder
     private final String jdbcUrl = "jdbc:postgresql://localhost:5432/direct2consumer";
-    private final String user = "henrylightfoot";
-    private final String password = "";
+    private final String user = "enterHere";
+    private final String password = "enterHere";
     private Connection conn;
     private Statement stmt;
 
