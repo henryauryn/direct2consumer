@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 
 public class SearchView {
 
-    private final Button backButton = new Button("Back");
+    private final Button backButton = new Button("← Back");
     private final TextField searchField = new TextField();
     private final Button searchButton = new Button("Search");
     private final Button addCustomerButton = new Button("Add Customer");
@@ -55,7 +55,7 @@ public class SearchView {
         layout.getStyleClass().add("main-container");
 
         // Title
-        Text title = new Text("Add Customer");
+        Text title = new Text("Your New Customer");
         title.getStyleClass().add("page-title");
 
         // Form layout

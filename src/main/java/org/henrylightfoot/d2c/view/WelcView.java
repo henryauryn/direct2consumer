@@ -6,10 +6,10 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 
 public class WelcView {
-    private Button viewCustomersButton = new Button("View Customers");
-    private Button reportsButton = new Button("Generate Reports");
-    private Button viewOutstandingTasks = new Button("View Outstanding Tasks");
-    private Button editProductDirectory = new Button("Edit Product Directory");
+    private Button viewCustomersButton = new Button("Customers");
+    private Button reportsButton = new Button("Reports");
+    private Button viewOutstandingTasks = new Button("Outstanding Tasks");
+    private Button editProductDirectory = new Button("Product Directory");
     private Button exitButton = new Button("Exit");
 
     public Parent getView() {

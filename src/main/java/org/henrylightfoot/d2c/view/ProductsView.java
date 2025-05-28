@@ -16,7 +16,7 @@ import java.util.function.UnaryOperator;
 
 public class ProductsView {
     private Button addButton = new Button("Add Product");
-    private Button backButton = new Button("Back");
+    private Button backButton = new Button("← Back");
     private TableView<Product> tableView = new TableView<>();
 
     private final TextField scentNameField = new TextField();

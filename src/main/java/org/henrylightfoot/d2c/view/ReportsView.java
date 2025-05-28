@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 
 public class ReportsView {
 
-    private final Button backButton = new Button("Back");
+    private final Button backButton = new Button("← Back");
 
 
     public Parent getView() {

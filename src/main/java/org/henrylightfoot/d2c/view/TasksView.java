@@ -13,7 +13,7 @@ import org.henrylightfoot.d2c.model.object.d2cObject;
 
 public class TasksView {
     private Button completedButton = new Button("Mark as completed");
-    private Button backButton = new Button("Back");
+    private Button backButton = new Button("← Back");
     private Button okButton = new Button("Okay");
     private TableView<d2cObject> tableView = new TableView<>();
 

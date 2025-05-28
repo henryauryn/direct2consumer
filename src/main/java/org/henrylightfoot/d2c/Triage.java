@@ -1,12 +1,15 @@
 package org.henrylightfoot.d2c;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import org.henrylightfoot.d2c.controller.Controller;
 import org.henrylightfoot.d2c.controller.WelcController;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.UnaryOperator;
+
 import org.henrylightfoot.d2c.controller.*;
 import org.henrylightfoot.d2c.model.dbBroker;
 import org.henrylightfoot.d2c.model.object.d2cObject;
@@ -20,6 +23,13 @@ public class Triage {
     private d2cObject customerDisplayed;
     private ArrayList<d2cObject> taskDisplayed = new ArrayList<>();
     private ArrayList<d2cObject> logDisplayed = new ArrayList<>();
+    private UnaryOperator<TextFormatter.Change> filter = change -> {
+        String newText = change.getControlNewText();
+        if (newText.matches("-?\\d*(\\.\\d*)?")) {
+            return change;
+        }
+        return null;
+    };
 
     private final Map<String, Controller> pages;
     private Triage(Stage stage) {
@@ -44,16 +54,16 @@ public class Triage {
         return searchResults;
     }
 
-    public void setCustomerDisplayed(d2cObject customerDisplayed) {
-        this.customerDisplayed = customerDisplayed;
+    public void setCustomerDisplayed(int custID) {
+        this.customerDisplayed = this.getDbService().getCustomer(custID);
     }
-    public void setTaskDisplayed(ArrayList<d2cObject> taskDisplayed) {
+    public void setTaskDisplayed(int custID) {
         this.taskDisplayed.clear();
-        this.taskDisplayed.addAll(taskDisplayed);
+        this.taskDisplayed.addAll(this.getDbService().getAllTasks(custID));
     }
-    public void setLogDisplayed(ArrayList<d2cObject> logDisplayed) {
+    public void setLogDisplayed(int custID) {
         this.logDisplayed.clear();
-        this.logDisplayed.addAll(logDisplayed);
+        this.logDisplayed.addAll(this.getDbService().getAllLogs(custID));
     }
     public d2cObject getCustomerDisplayed() {
         return customerDisplayed;
@@ -73,6 +83,9 @@ public class Triage {
         stage.setScene(pages.get(page).getScene());
         stage.setMaximized(false);
         stage.show();
+    }
+    public UnaryOperator<TextFormatter.Change> getFilter() {
+        return filter;
     }
 
 

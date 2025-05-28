@@ -6,6 +6,8 @@ import org.henrylightfoot.d2c.model.factory.CustomerFactory;
 import org.henrylightfoot.d2c.model.factory.LogFactory;
 import org.henrylightfoot.d2c.model.factory.TaskFactory;
 import org.henrylightfoot.d2c.model.object.Customer;
+import org.henrylightfoot.d2c.model.object.Log;
+import org.henrylightfoot.d2c.model.object.Task;
 import org.henrylightfoot.d2c.model.object.d2cObject;
 
 import java.sql.Connection;
@@ -210,6 +212,118 @@ public class dbBroker {
         }
         return results;
     }
+
+    public void insertTask(Task task) {
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO task VALUES (DEFAULT, ?, ?, ?, ?, ?)");
+            stmt.setString(1, task.nameProperty().get());
+            stmt.setDate(2, java.sql.Date.valueOf(task.dateProperty().get()));
+            stmt.setString(3, task.detailsProperty().get());
+            stmt.setInt(4, task.custIdProperty().get());
+            stmt.setBoolean(5, task.doneProperty().get());
+
+            accessService.runQueryNoResponse(stmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertLog(Log log) {
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement("INSERT INTO log VALUES (?,?, DEFAULT, ?, ?)");
+            stmt.setString(1, log.nameProperty().get());
+            stmt.setString(2, log.detailsProperty().get());
+            stmt.setInt(3, log.getCustID());
+            stmt.setDate(4, java.sql.Date.valueOf(log.dateProperty().get()));
+            accessService.runQueryNoResponse(stmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public ArrayList<ProductInList> getProductsToPickFrom() {
+        ArrayList<ProductInList> results = new ArrayList<>();
+        String query = """
+        select
+        	product_id,CONCAT(scent_name, ' ', product_form, ' ', volume, quantity, ' £', price)
+        from
+        	product;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                results.add(new ProductInList(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    public void addPurchase(int customerId, ProductInList chosenProduct, String pDate, int quantity) {
+        for (int i = 0; i < quantity; i++) {
+            try {
+                PreparedStatement stmt = accessService.getConn().prepareStatement("insert into \"customer_product\" values (DEFAULT,?,?,?);");
+                stmt.setInt(1,customerId);
+                stmt.setInt(2,chosenProduct.getID());
+                stmt.setDate(3,java.sql.Date.valueOf(pDate));
+                accessService.runQueryNoResponse(stmt);
+            } catch (SQLException e) {
+
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public ArrayList<ProductInList> getCustPurchases(int custID) {
+        ArrayList<ProductInList> results = new ArrayList<>();
+        String query = """
+        select
+            "customer_product".pc_id, CONCAT(scent_name, ' ', product_form, ' ', volume, quantity, ' on ', purchase_date, ' for £', price)
+        from
+            "customer_product"
+        inner join product on
+            product.product_id = "customer_product".product_id
+            and "customer_product".customer_id = ?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                results.add(new ProductInList(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    public String getCustPurchaseHeadline(int custID) {
+        String result = "";
+        String query = """
+       select
+        CONCAT('Bought ', COUNT(*), ' items totalling £', SUM(price))
+       from
+        "customer_product"
+       inner join product on "customer_product".product_id = product.product_id and "customer_product".customer_id=?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                result = rs.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+
+
 
 
 

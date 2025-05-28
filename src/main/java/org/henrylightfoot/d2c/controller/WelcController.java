@@ -18,7 +18,7 @@ public class WelcController implements Controller {
         view.getExitButton().setOnAction(event -> Platform.exit());
         view.getReportsButton().setOnAction(event -> {triage.showPage("reports");});
         view.getEditProductDirectoryButton().setOnAction(event -> {triage.showPage("products");});
-        scene = new Scene(view.getView(), 425, 425);
+        scene = new Scene(view.getView(), 300, 400);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
     }

@@ -7,6 +7,9 @@ public class TaskFactory extends d2cFactory {
     public d2cObject create(int uniqueID, String name, String date, String details, int custID, boolean done) {
         return new Task(uniqueID, name, date, details, custID, done);
     }
+    public Task create(String name, String date, String details, int custID) {
+        return new Task(0, name, date, details, custID, false);
+    }
 
     public d2cObject create(int uniqueID, String name, String date, String details, int custID, boolean done, String custName) {
         return new Task(uniqueID, name, date, details, custID, done, custName);

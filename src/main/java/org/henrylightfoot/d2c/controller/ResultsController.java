@@ -37,9 +37,9 @@ public class ResultsController implements Controller {
     private void viewCustomer() {
         if (!selectionModel.isEmpty()) {
             int custID = selectionModel.getSelectedItem().uniqueIDProperty().get();
-            triage.setCustomerDisplayed(triage.getDbService().getCustomer(custID));
-            triage.setTaskDisplayed(triage.getDbService().getAllTasks(custID));
-            triage.setLogDisplayed(triage.getDbService().getAllLogs(custID));
+            triage.setCustomerDisplayed(custID);
+            triage.setTaskDisplayed(custID);
+            triage.setLogDisplayed(custID);
             triage.showPage("customer");
         } else {
             dialogueEngine = new DialogueEngine(triage, new Scene(view.getAlert(), 250, 150), "");
