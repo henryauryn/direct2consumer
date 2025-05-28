@@ -17,6 +17,9 @@ public class Triage {
     private final Stage stage;
     private final dbBroker databaseService;
     private ArrayList<d2cObject> searchResults = new ArrayList<d2cObject>();
+    private d2cObject customerDisplayed;
+    private d2cObject taskDisplayed;
+    private d2cObject logDisplayed;
 
     private final Map<String, Controller> pages;
     private Triage(Stage stage) {
@@ -41,6 +44,24 @@ public class Triage {
         return searchResults;
     }
 
+    public void setCustomerDisplayed(d2cObject customerDisplayed) {
+        this.customerDisplayed = customerDisplayed;
+    }
+    public void setTaskDisplayed(d2cObject taskDisplayed) {
+        this.taskDisplayed = taskDisplayed;
+    }
+    public void setLogDisplayed(d2cObject logDisplayed) {
+        this.logDisplayed = logDisplayed;
+    }
+    public d2cObject getCustomerDisplayed() {
+        return customerDisplayed;
+    }
+    public d2cObject getTaskDisplayed() {
+        return taskDisplayed;
+    }
+    public d2cObject getLogDisplayed() {
+        return logDisplayed;
+    }
 
     public Stage getStage() {
         return stage;

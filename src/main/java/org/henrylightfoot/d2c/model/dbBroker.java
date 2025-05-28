@@ -96,6 +96,31 @@ public class dbBroker {
         return results;
     }
 
+    public d2cObject getCustomer(int custID) {
+        CustomerFactory customerFactory = new CustomerFactory();
+        ArrayList<d2cObject> results = new ArrayList<d2cObject>();
+        d2cObject customer = null;
+        String query = """
+        select
+        	*
+        from
+        	customer
+        where
+        	customer_id = ?;
+        """;
+        try {
+            PreparedStatement stmt = accessService.getConn().prepareStatement(query);
+            stmt.setInt(1, custID);
+            ResultSet rs = accessService.runQueryWithResponse(stmt);
+            while (rs.next()) {
+                customer = customerFactory.create(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 0, false);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
     public void taskCompleted(int taskId) {
         try {
             PreparedStatement stmt = accessService.getConn().prepareStatement("update task set done = true where task_id = ?;");
