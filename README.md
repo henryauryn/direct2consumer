@@ -8,7 +8,7 @@
 - Which Artificial Intelligence tools used (if applicable): **ChatGPT for Observer Design Pattern**
 
 
-## Features
+## Implementation highlights
 
 * Connects to local PostgreSQL via JDBC, Schema + seed data included via SQL
 * The GUI is written using JavaFX, styled with CSS
@@ -31,6 +31,10 @@
 * A global '**Triage**' singleton class controls the application and makes sure there aren't any unnecessary instances of anything
 * '**Triage**' holds access to the Data Transfer Object, globally-stored variables designed for transporting information between pages, and loose-coupling
 * '**DialogueEngine**' simulates pop-ups; JavaFX doesn't have a built-in class for this 
+
+## Design 
+
+<pre> ```mermaid classDiagram class Triage { +showPage(pageName: String) +getDbService(): DBService } class TasksController { -triage: Triage -scene: Scene -view: TasksView -selectionModel: TableViewSelectionModel -dialogueEngine: DialogueEngine +getScene(): Scene -populateTable() -markCompleted() -closeWindow(theButton: Button) } class TasksView { +getBackButton(): Button +getCompletedButton(): Button +getOkButton(): Button +getTableView(): TableView +getView(): Parent +getAlert(): Parent } class d2cObject { +uniqueIDProperty(): StringProperty } class DBService { +getAllTaskTableData(): List<d2cObject> +taskCompleted(uniqueID: String) } class DialogueEngine { +activate() } class Scene class Button class TableViewSelectionModel class TableView class Parent class StringProperty Triage --> DBService TasksController --> Triage TasksController --> TasksView TasksController --> TableViewSelectionModel TasksController --> DialogueEngine TasksController --> Scene TasksView --> Button TasksView --> TableView TasksView --> Parent TableViewSelectionModel --> d2cObject d2cObject --> StringProperty ``` </pre>
 
 
 
@@ -56,7 +60,7 @@
 
 ## Installation
 
-### Prerequisites
+### Assumptions
 - Java 17+
 - Maven 3.8+
 - PostgreSQL 14+
