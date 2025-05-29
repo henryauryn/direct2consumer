@@ -10,15 +10,15 @@
 
 ## Implementation highlights
 
-* Connects to local PostgreSQL via JDBC, Schema + seed data included via SQL
-* The GUI is written using JavaFX, styled with CSS
+* Connects to local **PostgreSQL** via **JDBC**, schema + seed data included via **SQL scripts**
+* The GUI is written using **JavaFX**, styled with **CSS**
 * Model-View-Controller-Controller Design
 * Easy to use interface
-* JUnit 5 tests included
-* Factory design pattern implements object creation across Customer, Log and Task instances - using '**d2cObject**' and '**d2cFactory**' abstract classes
-* Observer design pattern implements dynamic notifications of any customer tasks due on the same day as the system's LocalDate current date
+* **JUnit 5** tests included
+* Factory design pattern implements object creation across **Customer**, **Log** and **Task** instances - using '**d2cObject**' and '**d2cFactory**' abstract classes
+* Observer design pattern implements dynamic notifications of any customer tasks due on the same day as the system's **LocalDate** current date
 * Singleton design pattern implements the global state-managing '**Triage**' class 
-* Reports functionality implemented with JasperReports, using **jrxml** files created in JasperStudio. They connect directly to the Postgres database
+* Reports functionality implemented with **JasperReports**, using **jrxml** files created in **JasperStudio**. They connect directly to the Postgres database
 * A product directory is included, as well as functionality to track customer spending, and create reports to detail product performance
 * Logs and tasks can be added to each customer seamlessly, as well as an application-wide '**All current outstanding tasks**' view
 * **Parameter-safe SQL** is ensured. Similarly, user inputs are protected against using **TextFilters** applied to **JavaFX controls**
@@ -33,12 +33,20 @@
 * '**DialogueEngine**' simulates pop-ups; JavaFX doesn't have a built-in class for this 
 
 ## Design 
+### Core controller classes:
+![Dashboard](screenshots/triage.png)
+### Creation classes:
+![Dashboard](screenshots/creation.png)
+### View controller classes:
+![Dashboard](screenshots/controller.png)
+### Testing classes:
+![Dashboard](screenshots/test.png)
+### System Architecture:
+![Dashboard](screenshots/system.png)
 
-<pre> ```mermaid classDiagram class Triage { +showPage(pageName: String) +getDbService(): DBService } class TasksController { -triage: Triage -scene: Scene -view: TasksView -selectionModel: TableViewSelectionModel -dialogueEngine: DialogueEngine +getScene(): Scene -populateTable() -markCompleted() -closeWindow(theButton: Button) } class TasksView { +getBackButton(): Button +getCompletedButton(): Button +getOkButton(): Button +getTableView(): TableView +getView(): Parent +getAlert(): Parent } class d2cObject { +uniqueIDProperty(): StringProperty } class DBService { +getAllTaskTableData(): List<d2cObject> +taskCompleted(uniqueID: String) } class DialogueEngine { +activate() } class Scene class Button class TableViewSelectionModel class TableView class Parent class StringProperty Triage --> DBService TasksController --> Triage TasksController --> TasksView TasksController --> TableViewSelectionModel TasksController --> DialogueEngine TasksController --> Scene TasksView --> Button TasksView --> TableView TasksView --> Parent TableViewSelectionModel --> d2cObject d2cObject --> StringProperty ``` </pre>
 
 
-
-## 📸 Screenshots
+## Screenshots
 
 | Welcome Page                          |
 |---------------------------------------|
