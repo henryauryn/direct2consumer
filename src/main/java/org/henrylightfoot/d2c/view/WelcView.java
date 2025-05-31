@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 public class WelcView {
     //home page buttons
     private Button viewCustomersButton = new Button("Customers");
-    private Button reportsButton = new Button("reports");
+    private Button reportsButton = new Button("Reports");
     private Button viewOutstandingTasks = new Button("Outstanding Tasks");
     private Button editProductDirectory = new Button("Product Directory");
     private Button exitButton = new Button("Exit");

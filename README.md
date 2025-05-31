@@ -1,16 +1,12 @@
-# CS1OP-CW1
+# direct2Consumer
 
 ## Customer Relations Manager (CRM) Program
-- Module Code:  **CS1OP**
-- Assignment report Title: **Direct2Consumer**
-- Student Number (e.g. 25098635): **33026517**
-- Actual hrs spent for the assignment: **40**
-- Which Artificial Intelligence tools used (if applicable): **ChatGPT for Observer Design Pattern**
+### 1st year object-oriented programming project
 
 
 ## Implementation highlights
 
-* Connects to local **PostgreSQL** via **JDBC**, schema + seed data included via **SQL scripts**
+* Connects to remote **PostgreSQL** via **JDBC**, schema + seed data included for local recreation via **SQL scripts**
 * The GUI is written using **JavaFX**, styled with **CSS**
 * Model-View-Controller-Controller Design
 * Easy to use interface
@@ -52,6 +48,11 @@
 |---------------------------------------|
 | ![Dashboard](screenshots/welcome.png) |
 
+| Overdue task notifications                  |
+|---------------------------------------------|
+| ![Dashboard](screenshots/notifications.png) |
+
+
 | Add Customer                      |
 |-----------------------------------|
 | ![Dashboard](screenshots/add.png) |
@@ -60,9 +61,28 @@
 |----------------------------------------|
 | ![Dashboard](screenshots/products.png) |
 
+| Add Product                              |
+|------------------------------------------|
+| ![Dashboard](screenshots/addproduct.png) |
+
 | In-depth Customer View                 |
 |----------------------------------------|
 | ![Dashboard](screenshots/customer.png) |
+
+| Assign purchase                           |
+|-------------------------------------------|
+| ![Dashboard](screenshots/addpurchase.png) |
+
+| Assign task                          |
+|--------------------------------------|
+| ![Dashboard](screenshots/addlog.png) |
+
+| Assign log                            |
+|---------------------------------------|
+| ![Dashboard](screenshots/addtask.png) |
+
+
+
 ---
 
 

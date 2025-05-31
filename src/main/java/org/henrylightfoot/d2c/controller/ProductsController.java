@@ -5,7 +5,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import org.henrylightfoot.d2c.Triage;
 import org.henrylightfoot.d2c.view.ProductsView;
-import org.henrylightfoot.d2c.view.TasksView;
 
 
 public class ProductsController implements Controller {
@@ -20,7 +19,7 @@ public class ProductsController implements Controller {
         //populating choiceBoxes with drop-down options
         view.getQuantityChoiceBox().getItems().addAll("g", "ml");
         view.getTypeChoiceBox().getItems().addAll("Candle", "Eau de Parfum", "Eau de Toilette","Scented soap", "Perfumed hand cream", "Perfumed body balm", "Refillable solid perfume", "Hair mist", "Glass vessel", "Refill for home fragrance diffuser");
-        setButons();
+        setButtons();
         //formatting textfields so only numbers can be typed
         TextFormatter<String> priceFormatter = new TextFormatter<>(triage.getFilter());
         TextFormatter<String> volumeFormatter = new TextFormatter<>(triage.getFilter());
@@ -38,7 +37,7 @@ public class ProductsController implements Controller {
         populateTable();
         return scene;
     }
-    private void setButons() {
+    private void setButtons() {
         view.getBackButton().setOnAction(event -> {triage.showPage("welcome");});
         view.getAddButton().setOnAction(event -> {openAdd();});
         view.getCancelButton().setOnAction(event -> {closeWindow(view.getCancelButton());});

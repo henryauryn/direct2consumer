@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 public class DAO {
     //enter your credentials here after creating the seed database from the provided SQL scripts in the resources folder
-    private final String jdbcUrl = "jdbc:postgresql://localhost:5432/direct2consumer";
-    private final String user = "enterHere";
-    private final String password = "enterHere";
+    private final String jdbcUrl = "jdbc:postgresql://dpg-d0sr2cs9c44c73fesscg-a.frankfurt-postgres.render.com/direct2consumer?sslmode=require";
+    private final String user = "direct2consumer_user";
+    private final String password = "e9V2EJ3qzEvjNrvacCi1Q6JI61dHesgF";
     private Connection conn;
     private Statement stmt;
 
