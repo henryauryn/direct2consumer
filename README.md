@@ -98,6 +98,6 @@
 > The local PostgreSQL database this application was developed with is **not** automatically activated by Maven. Under the ‘**resources**’ directory there is both a **seed.sql** and a **schema.sql** file for a user to be able to easily recreate the exact database environment on their local machine. Once you have created a local instance, just input your host, username and password in the clearly marked **DAO.java** variables.
 
 ```bash
-git clone https://csgitlab.reading.ac.uk/mo026517/cs1op-cw1.git
+git clone https://github.com/henryauryn/direct2consumer.git
 cd cs1op-cw1
 mvn clean install
