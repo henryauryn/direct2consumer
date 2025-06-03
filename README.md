@@ -99,5 +99,5 @@
 
 ```bash
 git clone https://github.com/henryauryn/direct2consumer.git
-cd cs1op-cw1
+cd direct2consumer
 mvn clean install
